@@ -1,94 +1,89 @@
-﻿using CRUD_API.Data;
-using CRUD_API.Models.DTOs;
-using CRUD_API.Models.Entities;
+﻿using CRUD_API.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Pets.Application.Contract;
+using Pets.Application.Responses;
 
 namespace CRUD_API.Controllers
 {
-
     [ApiController]
     [Route("api/[Controller]")]
-
     public class PetsController : ControllerBase
     {
+        private readonly IPetService _service;
 
-        private readonly PetDataContext _Pets;
-
-        public PetsController(PetDataContext pets)
+        public PetsController(IPetService service)
         {
-            _Pets = pets;
+            _service = service;
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult GetAllPets()
         {
-            return Ok(_Pets.Pets.ToList());
+            try
+            {
+                var response = _service.GetAllPets();
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<string>.ErrorResponse(ex.Message, 400));
+            }
         }
 
-
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public IActionResult GetPetById(int id)
         {
-
-            var Pet = _Pets.Pets.Find(id);
-            if (Pet == null)
+            try
             {
-                return NotFound();
-
+                var response = _service.GetPetDetailsById(id);
+                return StatusCode(response.StatusCode, response);
             }
-            return Ok(Pet);
-
+            catch (Exception ex)
+            {
+                return NotFound(ApiResponse<string>.ErrorResponse(ex.Message, 404));
+            }
         }
 
         [HttpPost]
-        public IActionResult Post(PetDTO NewPet)
+        public IActionResult CreatePet(PetDTO dto)
         {
-            var newPet = new Pet
+            try
             {
-
-                Specie = NewPet.Specie,
-                Race = NewPet.Race,
-                Color = NewPet.Color,
-                Name = NewPet.Name,
-                HumanAge = NewPet.HumanAge
-            };
-
-            _Pets.Pets.Add(newPet);
-            _Pets.SaveChanges();
-
-            return CreatedAtAction(nameof(Get), new { id = newPet.Id }, newPet);
+                var response = _service.CreatePet(dto);
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ApiResponse<string>.ErrorResponse(ex.Message, 400));
+            }
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, PetUpdateDTO PetsUp)
+        [HttpPatch("{id}")]
+        public IActionResult UpdatePet(int id, PetUpdateDTO dto)
         {
-            var pet = _Pets.Pets.Find(id);
-            if (pet == null)
+            try
             {
-                return NotFound();
+                var response = _service.UpdatePetInformation(id, dto);
+                return StatusCode(response.StatusCode, response);
             }
-            pet.Name = PetsUp.Name;
-            pet.HumanAge = PetsUp.HumanAge;
-            _Pets.SaveChanges();
-            return NoContent();
+            catch (Exception ex)
+            {
+                return NotFound(ApiResponse<string>.ErrorResponse(ex.Message, 404));
+            }
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult DeletePet(int id)
         {
-            var pet = _Pets.Pets.Find(id);
-
-            if (pet == null)
+            try
             {
-                return NotFound();
+                var response = _service.DeletePet(id);
+                return StatusCode(response.StatusCode, response);
             }
-            _Pets.Pets.Remove(pet);
-            _Pets.SaveChanges();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return NotFound(ApiResponse<string>.ErrorResponse(ex.Message, 404));
+            }
         }
-
-
-
     }
 }
