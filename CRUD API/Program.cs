@@ -1,5 +1,12 @@
+
+using Pets.Persistence;
+using Microsoft.EntityFrameworkCore;
+using CRUD_API.Models;
+using Pets.Infrastructure.Repositories;
+
 using CRUD_API.Data;
 using Microsoft.EntityFrameworkCore;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +19,19 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<PetDataContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
+
+builder.Services.AddScoped<PetRepository>();
+builder.Services.AddScoped<UnitOfWork>();
+
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<Mapper>();
+
+}, typeof(Program).Assembly);
+
+
 
 var app = builder.Build();
 
