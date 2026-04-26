@@ -1,0 +1,38 @@
+﻿@model Impresiones3D.Web.Models.OrdenViewModel
+
+<h2>Editar Orden #@Model.Id</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+    <div class="form-group">
+        <label asp-for="ClienteId"></label>
+        <select asp-for="ClienteId" asp-items="ViewBag.Clientes" class="form-control" required></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaterialId"></label>
+        <select asp-for="MaterialId" asp-items="ViewBag.Materiales" class="form-control" required></select>
+    </div>
+    <div class="form-group">
+        <label asp-for="ImpresoraId"></label>
+        <select asp-for="ImpresoraId" class="form-control" asp-items="ViewBag.Impresoras">
+            <option value="">-- Sin asignar --</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="DescripcionModelo"></label>
+        <input asp-for="DescripcionModelo" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="CantidadPiezas"></label>
+        <input asp-for="CantidadPiezas" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="AlturaCapa"></label>
+        <input asp-for="AlturaCapa" class="form-control" step="0.01" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Relleno"></label>
+        <input asp-for="Relleno" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

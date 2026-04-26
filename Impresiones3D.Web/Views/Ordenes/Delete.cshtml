@@ -1,0 +1,11 @@
+﻿@model Impresiones3D.Web.Models.OrdenViewModel
+
+<h2>Eliminar Orden</h2>
+<p>¿Estás seguro de eliminar la orden <strong>#@Model.Id</strong> de <strong>@Model.ClienteNombre</strong>?</p>
+
+<form asp-action="Delete" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

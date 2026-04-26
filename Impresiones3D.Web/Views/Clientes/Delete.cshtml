@@ -1,0 +1,9 @@
+﻿@model Impresiones3D.Web.Models.ClienteViewModel
+
+<h2>Eliminar Cliente</h2>
+<p>¿Estás seguro de eliminar a <strong>@Model.Nombre</strong>?</p>
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Eliminar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

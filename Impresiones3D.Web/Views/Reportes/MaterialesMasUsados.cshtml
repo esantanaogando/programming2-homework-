@@ -1,0 +1,18 @@
+﻿@model IEnumerable<Impresiones3D.Web.Models.MaterialMasUsadoViewModel>
+
+<h2>Materiales más usados</h2>
+<table class="table table-striped">
+    <thead>
+        <tr><th>Material</th><th>Total de usos</th><th>Cantidad aprox. usada</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MaterialNombre</td>
+                <td>@item.TotalUsos</td>
+                <td>@item.CantidadTotalStockUsado</td>
+            </tr>
+        }
+    </tbody>
+</table>

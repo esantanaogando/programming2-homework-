@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Impresiones3D.Web.Models.TiempoUsoImpresoraViewModel>
+@{
+    ViewData["Title"] = "Tiempo de uso de impresoras";
+}
+
+<div class="page-header">
+    <h1>Uso de impresoras</h1>
+    <form method="post" asp-action="ExportarUsoImpresorasCsv">
+        <button type="submit" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-download"></i> Exportar CSV
+        </button>
+    </form>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">Horas acumuladas por impresora</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr><th>Impresora</th><th>Modelo</th><th>Tecnología</th><th>Horas totales</th><th>Órdenes realizadas</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.ImpresoraNombre</td>
+                        <td>@item.Modelo</td>
+                        <td><span class="badge badge-@item.Tecnologia">@item.Tecnologia</span></td>
+                        <td>@item.HorasTotalesUso.ToString("N2") h</td>
+                        <td>@item.TotalOrdenes</td>
+                        <td><span class="badge-estado badge-@item.Estado">@item.Estado</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

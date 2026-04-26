@@ -1,0 +1,18 @@
+﻿@model Impresiones3D.Web.Models.MaterialViewModel
+
+<h2>Detalles del Material</h2>
+<dl class="row">
+    <dt class="col-sm-2">ID</dt>
+    <dd class="col-sm-10">@Model.Id</dd>
+    <dt class="col-sm-2">Nombre</dt>
+    <dd class="col-sm-10">@Model.Nombre</dd>
+    <dt class="col-sm-2">Color</dt>
+    <dd class="col-sm-10">@Model.Color</dd>
+    <dt class="col-sm-2">Precio x Gramo</dt>
+    <dd class="col-sm-10">@Model.PrecioPorGramo.ToString("C")</dd>
+    <dt class="col-sm-2">Stock</dt>
+    <dd class="col-sm-10">@Model.Stock</dd>
+    <dt class="col-sm-2">Unidad</dt>
+    <dd class="col-sm-10">@Model.UnidadMedida</dd>
+</dl>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>
