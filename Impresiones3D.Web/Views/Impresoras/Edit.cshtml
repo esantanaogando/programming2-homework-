@@ -1,0 +1,56 @@
+﻿@model Impresiones3D.Web.Models.ImpresoraViewModel
+
+<h2>Editar Impresora</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="Modelo"></label>
+        <input asp-for="Modelo" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Tecnologia"></label>
+        <select asp-for="Tecnologia" class="form-control">
+            <option value="1">FDM</option>
+            <option value="2">SLA</option>
+            <option value="3">SLS</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="Estado"></label>
+        <select asp-for="Estado" class="form-control">
+            <option value="1">Disponible</option>
+            <option value="2">Ocupada</option>
+            <option value="3">Mantenimiento</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label asp-for="VelocidadMaxima"></label>
+        <input asp-for="VelocidadMaxima" class="form-control" type="number" />
+    </div>
+    <div class="form-group">
+        <label asp-for="VolumenX"></label>
+        <input asp-for="VolumenX" class="form-control" type="number" step="0.01" />
+    </div>
+    <div class="form-group">
+        <label asp-for="VolumenY"></label>
+        <input asp-for="VolumenY" class="form-control" type="number" step="0.01" />
+    </div>
+    <div class="form-group">
+        <label asp-for="VolumenZ"></label>
+        <input asp-for="VolumenZ" class="form-control" type="number" step="0.01" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

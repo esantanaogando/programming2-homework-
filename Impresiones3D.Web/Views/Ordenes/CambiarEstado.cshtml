@@ -1,0 +1,49 @@
+﻿@model Impresiones3D.Web.Models.OrdenViewModel
+
+<h2>Cambiar Estado de Orden #@Model.Id</h2>
+<p><strong>Estado actual:</strong> @Model.Estado</p>
+
+<form asp-action="CambiarEstado" method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <div class="form-group">
+        <label>Nuevo Estado</label>
+        <select id="nuevoEstado" name="nuevoEstado" class="form-control" asp-items="ViewBag.Estados" required></select>
+    </div>
+
+    <div id="divImpresora" class="form-group" style="display: none;">
+        <label>Asignar Impresora (requerido para En producción)</label>
+        <select name="impresoraId" class="form-control" asp-items="ViewBag.Impresoras">
+            <option value="">-- Seleccione impresora --</option>
+        </select>
+    </div>
+
+    <div id="divMotivo" class="form-group" style="display: none;">
+        <label>Motivo (obligatorio si cancela)</label>
+        <input name="motivo" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar Estado</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (function() {
+            var estadoSelect = document.getElementById("nuevoEstado");
+            var divImpresora = document.getElementById("divImpresora");
+            var divMotivo = document.getElementById("divMotivo");
+
+            function toggleCampos() {
+                var estado = estadoSelect.value;
+                divImpresora.style.display = (estado === "EnProduccion") ? "block" : "none";
+                divMotivo.style.display = (estado === "Cancelada") ? "block" : "none";
+            }
+
+            estadoSelect.addEventListener("change", toggleCampos);
+            toggleCampos();
+        })();
+    </script>
+}

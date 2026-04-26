@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Impresiones3D.Domain\Impresiones3D.Domain.csproj" />
+    <ProjectReference Include="..\Impresiones3D.Persistence\Impresiones3D.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

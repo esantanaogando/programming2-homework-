@@ -1,0 +1,38 @@
+﻿@model Impresiones3D.Web.Models.OrdenViewModel
+
+<h2>Detalles de la Orden #@Model.Id</h2>
+<dl class="row">
+    <dt class="col-sm-3">Cliente</dt>
+    <dd class="col-sm-9">@Model.ClienteNombre (@Model.ClienteId)</dd>
+    <dt class="col-sm-3">Material</dt>
+    <dd class="col-sm-9">@Model.MaterialNombre (@Model.MaterialId)</dd>
+    <dt class="col-sm-3">Impresora</dt>
+    <dd class="col-sm-9">@(string.IsNullOrEmpty(Model.ImpresoraNombre) ? "No asignada" : Model.ImpresoraNombre)</dd>
+    <dt class="col-sm-3">Modelo</dt>
+    <dd class="col-sm-9">@Model.DescripcionModelo</dd>
+    <dt class="col-sm-3">Cantidad</dt>
+    <dd class="col-sm-9">@Model.CantidadPiezas</dd>
+    <dt class="col-sm-3">Altura capa</dt>
+    <dd class="col-sm-9">@Model.AlturaCapa mm</dd>
+    <dt class="col-sm-3">Relleno</dt>
+    <dd class="col-sm-9">@Model.Relleno %</dd>
+    <dt class="col-sm-3">Tiempo estimado</dt>
+    <dd class="col-sm-9">@Model.TiempoEstimadoHoras hrs</dd>
+    <dt class="col-sm-3">Costo estimado</dt>
+    <dd class="col-sm-9">@Model.CostoEstimado.ToString("C")</dd>
+    <dt class="col-sm-3">Estado</dt>
+    <dd class="col-sm-9">@Model.Estado</dd>
+    <dt class="col-sm-3">Fecha solicitud</dt>
+    <dd class="col-sm-9">@Model.FechaSolicitud</dd>
+    @if (!string.IsNullOrEmpty(Model.MotivoCancelacion))
+    {
+        <dt class="col-sm-3">Motivo cancelación</dt>
+        <dd class="col-sm-9">@Model.MotivoCancelacion</dd>
+    }
+</dl>
+<a asp-action="Index" class="btn btn-secondary">Volver</a>
+
+@if (Model.Estado == "Entregada")
+{
+    <a asp-action="DescargarComprobante" asp-route-id="@Model.Id" class="btn btn-success">Descargar comprobante</a>
+}

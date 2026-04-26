@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Impresiones3D.Web.Models.IngresoReporteViewModel>
+@{
+    ViewData["Title"] = "Ingresos proyectados vs reales";
+    var desde = ViewBag.Desde as DateTime?;
+    var hasta = ViewBag.Hasta as DateTime?;
+}
+
+<div class="page-header">
+    <h1>Ingresos</h1>
+    <div>
+        <form method="post" asp-action="ExportarIngresosCsv" style="display:inline;">
+            <input type="hidden" name="desde" value="@desde?.ToString("yyyy-MM-dd")" />
+            <input type="hidden" name="hasta" value="@hasta?.ToString("yyyy-MM-dd")" />
+            <button type="submit" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-download"></i> Exportar CSV
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Desde</label>
+                <input type="date" name="desde" class="form-control" value="@desde?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Hasta</label>
+                <input type="date" name="hasta" class="form-control" value="@hasta?.ToString("yyyy-MM-dd")" />
+            </div>
+            <div class="col-md-2 align-self-end">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <span class="card-title">Detalle de ingresos</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr><th>Orden</th><th>Cliente</th><th>Material</th><th>Estimado</th><th>Real</th><th>Estado</th><th>Fecha</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><a asp-controller="Ordenes" asp-action="Details" asp-route-id="@item.OrdenId">#@item.OrdenId</a></td>
+                        <td>@item.ClienteNombre</td>
+                        <td>@item.MaterialNombre</td>
+                        <td>@item.CostoEstimado.ToString("C")</td>
+                        <td>@item.CostoReal.ToString("C")</td>
+                        <td><span class="badge-estado badge-@item.Estado">@item.Estado</span></td>
+                        <td>@item.FechaSolicitud.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

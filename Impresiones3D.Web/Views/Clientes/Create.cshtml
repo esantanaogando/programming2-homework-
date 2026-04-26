@@ -1,0 +1,23 @@
+﻿@model Impresiones3D.Web.Models.ClienteViewModel
+
+<h2>Crear Cliente</h2>
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="Nombre"></label>
+        <input asp-for="Nombre" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="Correo"></label>
+        <input asp-for="Correo" type="email" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label asp-for="Telefono"></label>
+        <input asp-for="Telefono" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Direccion"></label>
+        <input asp-for="Direccion" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+</form>

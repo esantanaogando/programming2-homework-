@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Impresiones3D.Web.Models.ClienteViewModel>
+
+<h2>Clientes</h2>
+<p><a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Nuevo Cliente</a></p>
+
+<table class="table table-striped">
+    <thead>
+        <tr><th>ID</th><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Acciones</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Nombre</td>
+                <td>@item.Correo</td>
+                <td>@item.Telefono</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm" title="Detalles"><i class="bi bi-info-circle"></i></a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm" title="Editar"><i class="bi bi-pencil"></i></a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" title="Eliminar"><i class="bi bi-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,601 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — 3DPrintFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #F0F2F8;
+            color: #1a1d29;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* ── Sidebar ── */
+        #sidebar {
+            width: 240px;
+            min-height: 100vh;
+            background: #111827;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 1000;
+        }
+
+        .sidebar-brand {
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.08);
+        }
+
+            .sidebar-brand .logo-icon {
+                width: 36px;
+                height: 36px;
+                border-radius: 10px;
+                background: linear-gradient(135deg,#7C3AED,#4F46E5);
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                color: #fff;
+                margin-right: 10px;
+            }
+
+            .sidebar-brand .brand-name {
+                color: #fff;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            .sidebar-brand .brand-sub {
+                color: #6B7280;
+                font-size: 11px;
+                display: block;
+            }
+
+        .nav-section-title {
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #4B5563;
+            padding: 20px 20px 6px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            flex: 1;
+        }
+
+            .sidebar-nav .nav-link {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 9px 20px;
+                color: #9CA3AF;
+                font-size: 13.5px;
+                font-weight: 500;
+                text-decoration: none;
+                border-radius: 0;
+                transition: all .15s;
+                border-left: 3px solid transparent;
+            }
+
+                .sidebar-nav .nav-link i {
+                    font-size: 16px;
+                    width: 18px;
+                    text-align: center;
+                }
+
+                .sidebar-nav .nav-link:hover {
+                    color: #fff;
+                    background: rgba(255,255,255,.06);
+                }
+
+                .sidebar-nav .nav-link.active {
+                    color: #fff;
+                    background: rgba(124,58,237,.2);
+                    border-left-color: #7C3AED;
+                }
+
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(255,255,255,.08);
+        }
+
+        .user-chip {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#7C3AED,#4F46E5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .user-name {
+            color: #E5E7EB;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .user-role {
+            color: #6B7280;
+            font-size: 11px;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #6B7280;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 0;
+            margin-left: auto;
+            transition: color .15s;
+        }
+
+            .logout-btn:hover {
+                color: #EF4444;
+            }
+
+        /* ── Main area ── */
+        #main-wrapper {
+            margin-left: 240px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            background: #fff;
+            border-bottom: 1px solid #E5E7EB;
+            padding: 0 28px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .page-content {
+            padding: 28px;
+            flex: 1;
+        }
+
+        /* ── Cards ── */
+        .card {
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,.06);
+        }
+
+        .card-header {
+            border-bottom: 1px solid #E5E7EB;
+            background: #fff;
+            border-radius: 12px 12px 0 0 !important;
+            padding: 16px 20px;
+        }
+
+        .card-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #111827;
+            margin: 0;
+        }
+
+        /* ── Stat cards ── */
+        .stat-card {
+            border-radius: 12px;
+            padding: 20px;
+            color: #fff;
+        }
+
+            .stat-card .stat-num {
+                font-size: 32px;
+                font-weight: 600;
+                line-height: 1;
+            }
+
+            .stat-card .stat-lbl {
+                font-size: 12px;
+                opacity: .8;
+                margin-top: 4px;
+            }
+
+            .stat-card .stat-icon {
+                font-size: 28px;
+                opacity: .35;
+            }
+
+        /* ── Tables ── */
+        .table {
+            font-size: 13.5px;
+        }
+
+            .table thead th {
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                letter-spacing: .06em;
+                color: #6B7280;
+                border-bottom: 1px solid #E5E7EB;
+                padding: 10px 12px;
+                background: #F9FAFB;
+            }
+
+            .table tbody td {
+                padding: 12px;
+                vertical-align: middle;
+                border-bottom: 1px solid #F3F4F6;
+            }
+
+            .table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            .table tbody tr:hover {
+                background: #FAFAFA;
+            }
+
+        /* ── Badges ── */
+        .badge-estado {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .badge-Pendiente {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-EnProduccion {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .badge-Pausada {
+            background: #F3F4F6;
+            color: #374151;
+        }
+
+        .badge-Completada {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-Entregada {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-Cancelada {
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+
+        .badge-Disponible {
+            background: #D1FAE5;
+            color: #065F46;
+        }
+
+        .badge-Ocupada {
+            background: #DBEAFE;
+            color: #1E40AF;
+        }
+
+        .badge-Mantenimiento {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .badge-FDM {
+            background: #EDE9FE;
+            color: #5B21B6;
+        }
+
+        .badge-SLA {
+            background: #FCE7F3;
+            color: #9D174D;
+        }
+
+        .badge-SLS {
+            background: #FFEDD5;
+            color: #9A3412;
+        }
+
+        /* ── Action buttons ── */
+        .btn-action {
+            font-size: 12px;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-primary {
+            background: #7C3AED;
+            border-color: #7C3AED;
+        }
+
+            .btn-primary:hover {
+                background: #6D28D9;
+                border-color: #6D28D9;
+            }
+
+        .btn-outline-secondary {
+            color: #374151;
+            border-color: #D1D5DB;
+        }
+
+            .btn-outline-secondary:hover {
+                background: #F9FAFB;
+            }
+
+        /* ── Forms ── */
+        .form-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #D1D5DB;
+            border-radius: 8px;
+            font-size: 13.5px;
+            padding: 8px 12px;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+            .form-control:focus, .form-select:focus {
+                border-color: #7C3AED;
+                box-shadow: 0 0 0 3px rgba(124,58,237,.12);
+            }
+
+        /* ── Stock bar ── */
+        .stock-bar {
+            height: 5px;
+            border-radius: 3px;
+            background: #E5E7EB;
+            overflow: hidden;
+        }
+
+        .stock-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        .stock-ok {
+            background: #10B981;
+        }
+
+        .stock-low {
+            background: #F59E0B;
+        }
+
+        .stock-out {
+            background: #EF4444;
+        }
+
+        /* ── Alerts ── */
+        .alert {
+            border-radius: 10px;
+            font-size: 13.5px;
+        }
+
+        /* ── Login page ── */
+        body.login-page {
+            background: #1a1d29;
+            display: block;
+        }
+
+        .login-wrap {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 36px 32px;
+            box-shadow: 0 20px 60px rgba(0,0,0,.3);
+        }
+
+        /* ── Page header ── */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+            .page-header h1 {
+                font-size: 20px;
+                font-weight: 600;
+                color: #111827;
+                margin: 0;
+            }
+
+        /* Toast area */
+        .toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body class="@(ViewContext.RouteData.Values["controller"]?.ToString() == "Account" ? "login-page" : "")">
+
+    @if (ViewContext.RouteData.Values["controller"]?.ToString() != "Account")
+    {
+        <!-- SIDEBAR -->
+        <nav id="sidebar">
+            <div class="sidebar-brand">
+                <span class="logo-icon">⬡</span>
+                <span class="brand-name">3DPrintFlow</span>
+                <span class="brand-sub">Panel de gestión</span>
+            </div>
+
+            <span class="nav-section-title">Principal</span>
+            <ul class="sidebar-nav">
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")"
+                       asp-controller="Home" asp-action="Index">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+            </ul>
+
+            <span class="nav-section-title">Gestión</span>
+            <ul class="sidebar-nav">
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Ordenes" ? "active" : "")"
+                       asp-controller="Ordenes" asp-action="Index">
+                        <i class="bi bi-file-earmark-text"></i> Órdenes
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Clientes" ? "active" : "")"
+                       asp-controller="Clientes" asp-action="Index">
+                        <i class="bi bi-people"></i> Clientes
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Materiales" ? "active" : "")"
+                       asp-controller="Materiales" asp-action="Index">
+                        <i class="bi bi-box-seam"></i> Materiales
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Impresoras" ? "active" : "")"
+                       asp-controller="Impresoras" asp-action="Index">
+                        <i class="bi bi-printer"></i> Impresoras
+                    </a>
+                </li>
+            </ul>
+
+            <span class="nav-section-title">Reportes</span>
+            <ul class="sidebar-nav">
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "MaterialesMasUsados" ? "active" : "")"
+                       asp-controller="Reportes" asp-action="MaterialesMasUsados">
+                        <i class="bi bi-bar-chart"></i> Materiales usados
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Ingresos" ? "active" : "")"
+                       asp-controller="Reportes" asp-action="Ingresos">
+                        <i class="bi bi-cash-stack"></i> Ingresos
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "TiempoUsoImpresoras" ? "active" : "")"
+                       asp-controller="Reportes" asp-action="TiempoUsoImpresoras">
+                        <i class="bi bi-clock-history"></i> Uso de impresoras
+                    </a>
+                </li>
+            </ul>
+
+            <!-- Sidebar footer / user -->
+            <div class="sidebar-footer">
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <div class="user-chip">
+                        <div class="user-avatar">@(User.Identity.Name?.Substring(0, 1).ToUpper())</div>
+                        <div>
+                            <div class="user-name">@User.Identity.Name</div>
+                            <div class="user-role">@(User.IsInRole("Admin") ? "Administrador" : "Operador")</div>
+                        </div>
+                        <form asp-controller="Account" asp-action="Logout" method="post">
+                            <button type="submit" class="logout-btn" title="Cerrar sesión">
+                                <i class="bi bi-box-arrow-right"></i>
+                            </button>
+                        </form>
+                    </div>
+                }
+            </div>
+        </nav>
+
+        <!-- MAIN -->
+        <div id="main-wrapper">
+            <div class="topbar">
+                <span class="topbar-title">@(ViewData["Title"] ?? "3DPrintFlow")</span>
+                <div style="font-size:13px; color:#6B7280;">
+                    @DateTime.Now.ToString("dddd, dd MMM yyyy", new System.Globalization.CultureInfo("es-ES"))
+                </div>
+            </div>
+            <div class="page-content">
+                @if (TempData["Success"] != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="bi bi-check-circle me-2"></i>@TempData["Success"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @if (TempData["Error"] != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-circle me-2"></i>@TempData["Error"]
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                }
+                @RenderBody()
+            </div>
+        </div>
+    }
+    else
+    {
+        @RenderBody()
+    }
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
